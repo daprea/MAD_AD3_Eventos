@@ -57,17 +57,7 @@
             </div>
             <br/>
 
-            <form action="@{/reservar}" th:object="${reserva}" method="post">
-                <div class='col-4'>
-                    <label for="cantidad" class="form-label">Cantidad</label>
-                    <input type="number" class="form-control" id="cantidad" th:field="*{cantidad}" />
-                </div>
-                <div class='col-3'>
-                    <div class="d-flex justify-content-center mt-3">
-                        <button class="btn btn-outline-primary">Reservar</button>
-                    </div>
-                </div>
-            </form>
+
         </div>
     </div>
 </div>

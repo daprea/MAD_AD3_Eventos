@@ -13,9 +13,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import eventos.modelo.dao.EventoDao;
 import eventos.modelo.dao.ReservaDao;
-import eventos.modelo.entitis.Evento;
-import eventos.modelo.entitis.Reserva;
-import eventos.modelo.entitis.Usuario;
+import eventos.modelo.entity.Evento;
+import eventos.modelo.entity.Reserva;
+import eventos.modelo.entity.Usuario;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -33,29 +33,42 @@ public class EventoController {
 	public String verEvento(Model model, @PathVariable (name="idEvento") int idEvento) {
 		Evento evento = eventodao.buscarEvento(idEvento);
 		model.addAttribute("evento", evento);
-		return "verDetalle";
+		return "detalle";
 	}
 		 				
 	
-	@GetMapping("/eventos/verDetalle")
+	@GetMapping("/verDetalle")
 	public String verDetalles (Model model) {
 		model.addAttribute("verDetalle");
-	 		return "verDetalle";		
+	 		return "detalle";
 	 }
 
-	@GetMapping("/eventos/verActivos")
+	@GetMapping("/verActivos")
 	public String verDetalleActivos (Model model) {		
-		List<Evento> evento = eventodao.verActivo();
+		List<Evento> evento = eventodao.verActivos();
 		model.addAttribute("evento", evento);
-		return "listaTodosActivoss";
+		return "home";
 	}
 	
-	@GetMapping("/eventos/verDestacados")
+	@GetMapping("/verDestacados")
 	public String verDestacados( Model model) {
 		
 		List<Evento> evento = eventodao.verDestacados();
 		model.addAttribute("evento", evento);
-		return "destacados";
+		return "home";
+	}
+
+	@GetMapping("/filtrarPorTipo/{tipo}")
+	public String filtrarPorTipo( Model model, @PathVariable (name="tipo") String tipo) {
+
+		List<Evento> evento = null;
+		if(tipo.equalsIgnoreCase("Todos") || tipo.equalsIgnoreCase("-1")){
+			evento = eventodao.buscarTodos();
+		}else{
+			evento = eventodao.filtrarPorTipo(tipo);
+		}
+		model.addAttribute("evento", evento);
+		return "home";
 	}
 
 	@PostMapping("/reservar")

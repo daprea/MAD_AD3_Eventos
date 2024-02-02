@@ -1,8 +1,6 @@
 package eventos.modelo.dao;
 
-import java.util.List;
-
-import eventos.modelo.entitis.Reserva;
+import eventos.modelo.entity.Reserva;
 
 public interface ReservaDao {
 	

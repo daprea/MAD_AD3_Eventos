@@ -37,27 +37,31 @@ public class DataUserConfiguration{
 	return users;
 
 	}
-	
-	
+
+
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 		http
-		.csrf(csrf -> csrf.disable());
+				.csrf(csrf -> csrf.disable());
 		// Los recursos estáticos no requieren autenticación
 		http.authorizeHttpRequests(authorize -> authorize
-			.requestMatchers("static/**").permitAll()
-			// Las vistas públicas no requieren autenticación
-			.requestMatchers("/registro","/", "/login", "/logout", "/eventos/verUno/**").permitAll()
-			.requestMatchers("/eventos/activos", "/eventos/destacados").permitAll()
-			.requestMatchers("/rest/encriptar/**").permitAll()
-			// Todas las demás URLs de la Aplicación requieren autenticación
-			// Asignar permisos a URLs por ROLES
-			.requestMatchers("/eventos/**").hasAnyAuthority("ROLE_CLIENTE") 
-			.requestMatchers("/reservas/**").hasAnyAuthority("ROLE_CLIENTE") 
-			
-			.anyRequest().authenticated())
-		// El formulario de Login no requiere autenticacion
-		.formLogin().loginPage("/login");
+						.requestMatchers("static/**").permitAll()
+						.requestMatchers("/ejemplo").permitAll()
+						.requestMatchers("/eventos/verDetalle").permitAll()
+						.requestMatchers("/eventos/detalle/**").permitAll()
+						.requestMatchers("/eventos/filtrarPorTipo/**").permitAll()
+						// Las vistas públicas no requieren autenticación
+						.requestMatchers("/registro","/", "/login", "/logout", "/eventos/verUno/**").permitAll()
+						.requestMatchers("/eventos/verActivos", "/eventos/verDestacados").permitAll()
+						.requestMatchers("/rest/encriptar/**").permitAll()
+						// Todas las demás URLs de la Aplicación requieren autenticación
+						// Asignar permisos a URLs por ROLES
+						.requestMatchers("/eventos/**").hasAnyAuthority("ROLE_CLIENTE")
+						.requestMatchers("/reservas/**").hasAnyAuthority("ROLE_CLIENTE")
+
+						.anyRequest().authenticated())
+				// El formulario de Login no requiere autenticacion
+				.formLogin(form -> form.permitAll());
 		return http.build();
 	}
 	
@@ -65,7 +69,6 @@ public class DataUserConfiguration{
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-
 	
 
 }
