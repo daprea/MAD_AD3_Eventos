@@ -16,8 +16,8 @@
 <body>
 
 <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <h2 th:href="@{/}">Eventos</h2>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" th:href="@{/}">Eventos</a>
         <a class="nav-link" th:href="@{/eventos/verActivos}">Activos</a>
         <a class="nav-link" th:href="@{/eventos/verDestacados}">Destacados</a>
         <label for="tipos">Elige una opción:  </label>
@@ -42,7 +42,7 @@
             <span th:text="${#authentication.name}"></span>
         </div>
         <ul class="nav justify-content-end">
-			<li sec:authorize="isAuthenticated()" class="nav-item"><a class="nav-link" th:href="@{/reservas}">Mis reservas</a></li>
+			<!--<li sec:authorize="isAuthenticated()" class="nav-item"><a class="nav-link" th:href="@{/reservas}">Mis reservas</a></li>-->
             <li sec:authorize="!isAuthenticated()" class="nav-item"><a class="nav-link" th:href="@{/ingresar}">Iniciar Sesión</a></li>
             <li sec:authorize="!isAuthenticated()" class="nav-item"><a class="nav-link" th:href="@{/registro}">Registrarse</a></li>
             <li sec:authorize="isAuthenticated()" class="nav-item"><a class="nav-link" th:href="@{/logout}">Cerrar Sesión</a></li>
