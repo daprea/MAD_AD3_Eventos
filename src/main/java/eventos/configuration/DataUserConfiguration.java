@@ -23,7 +23,6 @@ import org.springframework.security.web.SecurityFilterChain;
 public class DataUserConfiguration{
 	
 	@Bean
-
 	public UserDetailsManager usersCustom(DataSource dataSource) {
 
 	JdbcUserDetailsManager users = 
@@ -33,6 +32,14 @@ public class DataUserConfiguration{
 	 "inner join usuarios u on u.username = up.username " +
 			"inner join perfiles p on p.id_perfil = up.id_perfil " +
 			"where u.username = ?");
+
+			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+						String plainPassword = "password";
+						String encodedPassword = passwordEncoder.encode(plainPassword);
+				
+						System.out.println("Password: " + plainPassword);
+						System.out.println("Encoded Password: " + encodedPassword);
 
 	return users;
 
@@ -50,14 +57,17 @@ public class DataUserConfiguration{
 						.requestMatchers("/eventos/verDetalle").permitAll()
 						.requestMatchers("/eventos/detalle/**").permitAll()
 						.requestMatchers("/eventos/filtrarPorTipo/**").permitAll()
+						//temporal
+						.requestMatchers("/reservas/**").permitAll()
+						.requestMatchers("/eventos/**").permitAll()
 						// Las vistas públicas no requieren autenticación
 						.requestMatchers("/registro","/", "/login", "/logout", "/eventos/verUno/**").permitAll()
 						.requestMatchers("/eventos/verActivos", "/eventos/verDestacados").permitAll()
 						.requestMatchers("/rest/encriptar/**").permitAll()
 						// Todas las demás URLs de la Aplicación requieren autenticación
 						// Asignar permisos a URLs por ROLES
-						.requestMatchers("/eventos/**").hasAnyAuthority("ROLE_CLIENTE")
-						.requestMatchers("/reservas/**").hasAnyAuthority("ROLE_CLIENTE")
+						//.requestMatchers("/eventos/**").hasAnyAuthority("ROLE_CLIENTE")
+						//.requestMatchers("/reservas/**").hasAnyAuthority("ROLE_CLIENTE")
 
 						.anyRequest().authenticated())
 				// El formulario de Login no requiere autenticacion
