@@ -6,9 +6,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <script>
-         function redirigir() {
+         function filtrarPorTipo() {
             var selectedValue = document.getElementById("tipos").value;
-            // Puedes construir la URL de destino y redirigir según la opción seleccionada
             window.location.href = '/eventos/filtrarPorTipo/' + selectedValue;
         }
     </script>
@@ -21,7 +20,7 @@
         <a class="nav-link" th:href="@{/eventos/verActivos}">Activos</a>
         <a class="nav-link" th:href="@{/eventos/verDestacados}">Destacados</a>
         <label for="tipos" style="color: white;">Elige una opción:  </label>
-        <select id="tipos" onchange="redirigir()" class="nav-link">
+        <select id="tipos" onchange="filtrarPorTipo()" class="nav-link">
             <option value="-1">Seleccione una opcion</option>
             <option value="todos">Todos</option>
             <option value="concierto">Conciertos</option>
@@ -30,11 +29,9 @@
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-                <li sec:authorize="hasAnyRole('ROLE_GESTOR','ROLE_ADMINISTRADOR')" class="nav-item">
-                    <a class="nav-link" th:href="@{/app/usuarios/todos}">Usuarios</a>
-                </li>
-                <li sec:authorize="hasRole('ROLE_ADMINISTRADOR')" class="nav-item">
-                    <a class="nav-link" th:href="@{/app/perfiles/todos}">Perfiles</a>
+                <li  class="nav-item">
+                    <!--a sec:authorize="isAuthenticated()" class="nav-link" th:href="@{/reservas/consultarReservas}">Mis reservas</a-->
+                    <a class="nav-link" th:href="@{/reservas/consultarReservas}">Mis reservas</a>
                 </li>
             </ul>
         </div>
@@ -42,9 +39,7 @@
             <span th:text="${#authentication.name}"></span>
         </div>
         <ul class="nav justify-content-end">
-			<!--<li sec:authorize="isAuthenticated()" class="nav-item"><a class="nav-link" th:href="@{/reservas}">Mis reservas</a></li>-->
-            <li sec:authorize="!isAuthenticated()" class="nav-item"><a class="nav-link" th:href="@{/ingresar}">Iniciar Sesión</a></li>
-            <li sec:authorize="!isAuthenticated()" class="nav-item"><a class="nav-link" th:href="@{/registro}">Registrarse</a></li>
+            <li sec:authorize="!isAuthenticated()" class="nav-item"><a class="nav-link" th:href="@{/login}">Iniciar Sesión</a></li>
             <li sec:authorize="isAuthenticated()" class="nav-item"><a class="nav-link" th:href="@{/logout}">Cerrar Sesión</a></li>
 
         </ul>
@@ -63,7 +58,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr th:each="ele : ${evento}">
+            <tr th:each="ele : ${eventos}">
                 <td th:text="${ele.nombre}"></td>
                 <td th:text="${ele.aforoMaximo}"></td>
                 <td th:text="${ele.fechaInicio}"></td>
