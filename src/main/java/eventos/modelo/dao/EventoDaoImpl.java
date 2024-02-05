@@ -34,17 +34,12 @@ public class EventoDaoImpl implements EventoDao{
 	}
 
 	@Override
-	public List<Evento> mostrarTipo(String nombre) {
-		return null;
-	}
-
-	@Override
-	public int reservarEvento(int idEvento, int cantidad) {
-		return 0;
-	}
-
-	@Override
 	public List<Evento> filtrarPorTipo(String tipo) {
 		return eventoRepository.filtrarPorTipo(tipo);
+	}
+
+	@Override
+	public void save(Evento evento) {
+		eventoRepository.save(evento);
 	}
 }
