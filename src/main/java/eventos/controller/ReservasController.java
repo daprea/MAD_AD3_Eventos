@@ -52,7 +52,7 @@ public class ReservasController {
 
 		Reserva reserva = reservaDao.buscarReserva(idEvento, username);
  
-		int codigo = reservaDao.reservarEventoV2(reserva, evento, numeroEntradas);
+		int codigo = reservaDao.reservarEvento(reserva, evento, numeroEntradas);
 		
 		switch (codigo) {
 		case 1:
