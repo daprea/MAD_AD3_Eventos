@@ -3,12 +3,14 @@ package eventos.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import eventos.modelo.dao.EventoDao;
@@ -45,69 +47,33 @@ public class EventoController {
 
 	@GetMapping("/verActivos")
 	public String verDetalleActivos (Model model) {		
-		List<Evento> evento = eventodao.verActivos();
-		model.addAttribute("evento", evento);
+		List<Evento> eventos = eventodao.verActivos();
+		model.addAttribute("eventos", eventos);
 		return "home";
 	}
 	
 	@GetMapping("/verDestacados")
 	public String verDestacados( Model model) {
 		
-		List<Evento> evento = eventodao.verDestacados();
-		model.addAttribute("evento", evento);
+		List<Evento> eventos = eventodao.verDestacados();
+		model.addAttribute("eventos", eventos);
 		return "home";
 	}
 
 	@GetMapping("/filtrarPorTipo/{tipo}")
 	public String filtrarPorTipo( Model model, @PathVariable (name="tipo") String tipo) {
 
-		List<Evento> evento = null;
+		List<Evento> eventos = null;
 		if(tipo.equalsIgnoreCase("Todos") || tipo.equalsIgnoreCase("-1")){
-			evento = eventodao.buscarTodos();
+			eventos = eventodao.buscarTodos();
 		}else{
-			evento = eventodao.filtrarPorTipo(tipo);
+			eventos = eventodao.filtrarPorTipo(tipo);
 		}
-		model.addAttribute("evento", evento);
+		model.addAttribute("eventos", eventos);
 		return "home";
 	}
 
-	@PostMapping("/reservar")
-	public String reservarEvento(Model model, @PathVariable ("username") String username, 
-			@PathVariable ("idEvento") int  idEvento, @PathVariable ("cantidad") int cantidad, // cantidad de entradas máxima
-			HttpSession sesion, RedirectAttributes ratt) {
-		
-		Evento evento = (Evento) sesion.getAttribute("evento" + idEvento);
-		Usuario usuario = (Usuario) sesion.getAttribute(username);
-		
-		if (usuario != null && evento != null && cantidad <= 10) { // cantidad no puede superar 10 entradas
-	        Reserva reserva = new Reserva();
-	        reserva.setUsuario(usuario);
-	        reserva.setEvento(evento);
-	        reserva.setCantidad(cantidad); // 
-
-	        int codigo = redao.reservarEventoV2(reserva);
-	        
-	        switch (codigo) {
-			case 0:
-				ratt.addFlashAttribute("mensaje", "Reserva realizada");
-				break;
-			case 1:
-				ratt.addFlashAttribute("mensaje", "No pudo realizarse la reserva: aforo maximo excedido");
-				break;
-			case 2:
-				ratt.addFlashAttribute("mensaje", "ya tenía una reserva para este evento, informar");
-				break;
-			case 3:
-				ratt.addFlashAttribute("mensaje", "No pudo realizarse la reserva: No permitir más de 10 entradas en una reserva");
-				break;
-			default:
-				ratt.addFlashAttribute("mensaje", "Usuario o evento no encontrados");
-				break;
-	        }
-	       
-		}
-		return "redirect:/home";
-	}
+	
 
 }
 	
