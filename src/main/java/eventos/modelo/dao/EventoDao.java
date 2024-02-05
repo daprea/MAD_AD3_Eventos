@@ -10,7 +10,6 @@ public interface EventoDao {
 	Evento buscarEvento(int idEvento);
 	List<Evento> verActivos();
 	List<Evento> verDestacados();
-	List<Evento> mostrarTipo(String nombre);
-	int reservarEvento(int idEvento, int cantidad);
 	List<Evento> filtrarPorTipo(String tipo);
+   	void save(Evento evento);
 }
