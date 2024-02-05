@@ -40,11 +40,13 @@
 
     <script>
         function reservar() {
+            // Obtener el elemento select y el enlace
+            var selectElement = document.getElementById('numeroEntradas');
+            var enlace = document.getElementById('enlace');
 
-            let xmlHttp = new XMLHttpRequest()
-            var numeroEntradas = document.getElementById("numeroEntradas").value;
+            var idEvento = document.getElementById('idEvento');
 
-             window.location.href = '/eventos/reservar/' + numeroEntradas;
+            window.location.href = '/reservas/reservar?idEvento=' + idEvento.innerText + "&numeroEntradas=" + selectElement.value;
         }
 
     </script>
@@ -53,14 +55,12 @@
 	 <header>
 	    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 	        <a class="navbar-brand" th:href="@{/}">Eventos</a>
-	       
-	       
-	        
 	    </nav>
 	</header>
     <h1>Detalles del Evento</h1>
 
     <div>
+        <p><strong>ID:</strong> <span id="idEvento" th:text="*{evento.idEvento}"></span></p>
         <p><strong>Nombre:</strong> <span th:text="*{evento.nombre}"></span></p>
         <p><strong>Descripción:</strong> <span th:text="*{evento.descripcion}"></span></p>
         <p><strong>Dirección:</strong> <span th:text="*{evento.direccion}"></span></p>
@@ -72,13 +72,13 @@
         </br>
         <p><strong>Quedan</strong>:</strong> <span th:text="*{evento.aforoMaximo}"></span> entradas</p>
         <label for="numeroEntradas">Selecciona numero entradas:</label>
-        <select id="numeroEntradas" name="seleccionNumero">
+        <select id="numeroEntradas" name="numeroEntradas">
             <option th:each="numero : ${#numbers.sequence(1, 10)}" th:value="${numero}" th:text="${numero}"></option>
         </select>
+        </br>
+        <button class="btn btn-primary" onclick="reservar()">Reservar</button>
+        <button class="btn btn-danger" onclick="window.location.href = '/';">Cancelar</button>
     </div>
-
-        <button class="btn btn-info" onclick="reservar()">Reservar</button>
-        <button class="btn btn-danger" onclick="window.history.back()">Cancelar</button>
 
 </body>
 </html>
