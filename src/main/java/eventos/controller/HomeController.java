@@ -23,7 +23,7 @@ public class HomeController {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
-	@GetMapping({"", "/", "/home"})
+	@GetMapping({"", "/"})
 	public String verHome(Model model) {
 		List<Evento> eventos = edao.buscarTodos();
 		model.addAttribute("eventos", eventos);
