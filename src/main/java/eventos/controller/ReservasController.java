@@ -55,18 +55,8 @@ public class ReservasController {
 		int codigo = reservaDao.reservarEvento(reserva, evento, numeroEntradas);
 		
 		switch (codigo) {
-		case 1:
-			model.addAttribute("mensaje", "No pudo realizarse la reserva: aforo maximo excedido");
-			break;
-		case 2:
-			model.addAttribute("mensaje", "ya tenía una reserva para este evento");
-			break;
-		case 3:
-			model.addAttribute("mensaje", "No pudo realizarse la reserva: No permitir más de 10 entradas en una reserva");
-			break;
-		}
-
-		if(codigo == 0){
+		//	La reserva se puede realizar
+		case 0:
 			reserva = new Reserva();	        
 			reserva.setEvento(evento);
 			reserva.setCantidad(numeroEntradas);
@@ -79,7 +69,21 @@ public class ReservasController {
 
 			eventoDao.save(evento);
 			reservaDao.save(reserva);
-		}    
+			break;
+		case 1:
+			model.addAttribute("mensaje", "No pudo realizarse la reserva: aforo maximo excedido");
+			break;
+		case 2:
+			model.addAttribute("mensaje", "ya tenía una reserva para este evento");
+			break;
+		case 3:
+			model.addAttribute("mensaje", "No pudo realizarse la reserva: No permitir más de 10 entradas en una reserva");
+			break;
+		case 4:
+			model.addAttribute("mensaje", "No pudo realizarse la reserva: El evento selecionado no existe");
+			break;
+
+		}
 
 		List<Reserva> reservas = reservaDao.consultarReservas(username);
 		model.addAttribute("reservas", reservas);
