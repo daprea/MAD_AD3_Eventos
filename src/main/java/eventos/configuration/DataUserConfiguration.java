@@ -4,16 +4,14 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
@@ -32,15 +30,6 @@ public class DataUserConfiguration{
 	 "inner join usuarios u on u.username = up.username " +
 			"inner join perfiles p on p.id_perfil = up.id_perfil " +
 			"where u.username = ?");
-
-			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-						String plainPassword = "password";
-						String encodedPassword = passwordEncoder.encode(plainPassword);
-				
-						System.out.println("Password: " + plainPassword);
-						System.out.println("Encoded Password: " + encodedPassword);
-
 	return users;
 
 	}
@@ -52,18 +41,20 @@ public class DataUserConfiguration{
 				.csrf(csrf -> csrf.disable());
 		// Los recursos estáticos no requieren autenticación
 		http.authorizeHttpRequests(authorize -> authorize
+						// Las vistas públicas no requieren autenticación
+						.requestMatchers("/registro","/", "/login", "/logout", "/eventos/verUno/**").permitAll()
 						.requestMatchers("static/**").permitAll()
-						.requestMatchers("/ejemplo").permitAll()
+						.requestMatchers("/rest/encriptar/**").permitAll()
 						.requestMatchers("/eventos/verDetalle").permitAll()
 						.requestMatchers("/eventos/detalle/**").permitAll()
 						.requestMatchers("/eventos/filtrarPorTipo/**").permitAll()
+						.requestMatchers("/eventos/verActivos", "/eventos/verDestacados").permitAll()
+						.requestMatchers("/login/acceder**").permitAll()
+						.requestMatchers("/login/registro**").permitAll()
 						//temporal
 						.requestMatchers("/reservas/**").permitAll()
 						.requestMatchers("/eventos/**").permitAll()
-						// Las vistas públicas no requieren autenticación
-						.requestMatchers("/registro","/", "/login", "/logout", "/eventos/verUno/**").permitAll()
-						.requestMatchers("/eventos/verActivos", "/eventos/verDestacados").permitAll()
-						.requestMatchers("/rest/encriptar/**").permitAll()
+						
 						// Todas las demás URLs de la Aplicación requieren autenticación
 						// Asignar permisos a URLs por ROLES
 						//.requestMatchers("/eventos/**").hasAnyAuthority("ROLE_CLIENTE")
@@ -71,14 +62,16 @@ public class DataUserConfiguration{
 
 						.anyRequest().authenticated())
 				// El formulario de Login no requiere autenticacion
-				.formLogin(form -> form.permitAll());
+				.formLogin(form -> form.permitAll()
+					.loginPage("/login")
+					.defaultSuccessUrl("/home", true));
 		return http.build();
 	}
-	
+
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
 
 }
